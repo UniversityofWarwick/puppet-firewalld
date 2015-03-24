@@ -32,6 +32,7 @@ Puppet::Type.type(:firewalld_direct_chain).provide :firewall_direct_chain, :pare
 
   def execute_change(*args)
     execute(['firewall-cmd', args].flatten.compact.join(' '))
+    execute(['firewall-cmd', '--permanent', args].flatten.compact.join(' '))
   end
 
   def self.prefetch(resources)

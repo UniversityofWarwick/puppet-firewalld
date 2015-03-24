@@ -36,6 +36,7 @@ Puppet::Type.type(:firewalld_direct_rule).provide :firewall_direct_rule, :parent
 
   def execute_change(*args)
     execute(['firewall-cmd', args].flatten.compact.join(' '))
+    execute(['firewall-cmd', '--permanent', args].flatten.compact.join(' '))
   end
 
   def generated_name(props)
