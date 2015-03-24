@@ -12,6 +12,26 @@ class Puppet::Provider::Firewalld < Puppet::Provider
     end
   end
 
+  # Matches up existing known resources (`instances`) with the declared resources.
+  # Normally this is a simple name match, but as chains don't have names and are only
+  # really defined by their attributes, we need to compare all their values to see
+  # when a resource already exists.
+  # 
+  # Not called automatically - call this from within your prefetch method, e.g.
+  #     prefetch_by_property(resources, [:ipv, :table, :chain])
+  def self.prefetch_by_property(resources, id_properties)
+    instances.each do |instance|
+      resources.each do |name, resource|
+        instance_namedef = id_properties.map { |prop| instance.send(prop) }.join(' ')
+        resource_namedef = id_properties.map { |prop| resource[prop] }.join(' ')
+        if instance_namedef == resource_namedef
+          resource.provider = instance
+        end
+      end
+    end
+  end
+
+
   # Clear out the cached values.
   def flush
     @property_hash.clear
