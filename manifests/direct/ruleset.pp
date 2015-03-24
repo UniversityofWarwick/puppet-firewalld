@@ -35,7 +35,7 @@ define firewalld::direct::ruleset(
       true  => $start_port,
       false => "${start_port}:${end_port}",
     }
-    $rule = "-m ${proto} -p ${proto} -s ${source} --dport ${port_spec}"
+    $rule = "-m ${proto} -p ${proto} -s ${source} --dport ${port_spec} -j ACCEPT"
     firewalld_direct_rule { "ipv4 filter ${chain_name} 0 ${rule}" :
       ensure => $ensure,
       priority => 0,
