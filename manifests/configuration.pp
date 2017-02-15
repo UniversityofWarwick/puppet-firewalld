@@ -53,7 +53,8 @@ class firewalld::configuration (
   $minimal_mark    = '100',
   $cleanup_on_exit = 'yes',
   $lockdown        = 'no',
-  $IPv6_rpfilter   = 'yes'
+  $IPv6_rpfilter   = 'yes',
+  $manage_config   = true,
 ) {
   include firewalld
 
@@ -69,13 +70,15 @@ class firewalld::configuration (
     notify   => Service['firewalld'], # restart service
   }
 
-  file { '/etc/firewalld/firewalld.conf':
-    ensure  => file,
-    content => template('firewalld/firewalld.conf.erb'),
-    owner   => root,
-    group   => root,
-    mode    => '0640',
-    require => Package['firewalld'], # make sure package is installed
-    notify  => Service['firewalld'], # restart service
+  if $manage_config {
+    file { '/etc/firewalld/firewalld.conf':
+      ensure  => file,
+      content => template('firewalld/firewalld.conf.erb'),
+      owner   => root,
+      group   => root,
+      mode    => '0640',
+      require => Package['firewalld'], # make sure package is installed
+      notify  => Service['firewalld'], # restart service
+    }
   }
 }
