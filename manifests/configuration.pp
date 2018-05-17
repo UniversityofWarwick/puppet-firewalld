@@ -38,7 +38,7 @@
 #   If set to 'yes', firewall changes with the D-Bus interface will be
 #   limited to applications that are listed in the lockdown whitelist.
 #   Default is 'no'
-# [*IPv6_rpfilter*]
+# [*ipv6_rpfilter*]
 #   Performs a reverse path filter test on a packet for IPv6. If a reply to
 #   the packet would be sent via the same interface that the packet arrived on,
 #   the packet will match and be accepted, otherwise dropped. Default is 'yes'.
@@ -49,25 +49,23 @@
 #    default_zone    =>      'custom',}
 #
 class firewalld::configuration (
-  $default_zone    = 'public',
-  $minimal_mark    = '100',
+  $default_zone = 'public',
+  $minimal_mark = '100',
   $cleanup_on_exit = 'yes',
-  $lockdown        = 'no',
-  $IPv6_rpfilter   = 'yes',
+  $lockdown = 'no',
+  $ipv6_rpfilter = 'yes',
   $manage_config   = true,
 ) {
+
   include firewalld
 
   file { '/etc/firewalld/':
-    ensure   => directory,            # make sure this is a directory
-    #recurse => true,                 # recursively manage directory
-    #purge   => true,                 # purge all unmanaged files
-    #force   => true,                 # also purge subdirs and links
-    owner    => root,
-    group    => root,
-    mode     => '0750',
-    require  => Package['firewalld'], # make sure package is installed
-    notify   => Service['firewalld'], # restart service
+    ensure  => directory,            # make sure this is a directory
+    owner   => root,
+    group   => root,
+    mode    => '0750',
+    require => Package['firewalld'], # make sure package is installed
+    notify  => Service['firewalld'], # restart service
   }
 
   if $manage_config {

@@ -44,11 +44,11 @@ define firewalld::rich_rule(
 
   include firewalld::configuration
 
-  firewalld_rich_rule { "$name":
-    ensure        => $ensure,
-    zone          => $zone,
-    rich_rules    => $rich_rules,
-    notify        => Service['firewalld']
+  firewalld_rich_rule { $name:
+    ensure     => $ensure,
+    zone       => $zone,
+    rich_rules => $rich_rules,
+    notify     => Exec['firewalld::reload'],
+    require    => Firewalld_zone[$zone],
   }
 }
-
